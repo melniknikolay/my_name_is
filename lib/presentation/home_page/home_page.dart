@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
                Text(
-                'Добро пожаловать ${user?.email!}',
+                'Добро пожаловать ${user?.email}',
                 style: const TextStyle(fontSize: 24),
                 textAlign: TextAlign.center,
               ),
