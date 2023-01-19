@@ -2,8 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_name_is/data/repositories/firebase_card_repository.dart';
+import 'package:my_name_is/data/repositories/i_business_card_repository.dart';
 
 import 'bloc/auth/auth_bloc.dart';
+import 'bloc/my_card/my_card_bloc.dart';
 import 'data/repositories/firebase_auth_repository.dart';
 import 'data/repositories/i_auth_repository.dart';
 import 'presentation/home_page/home_page.dart';
@@ -20,12 +23,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider<IAuthRepository>(
-      create: (context) => AuthRepository(),
-      child: BlocProvider(
-        create: (context) => AuthBloc(
-          authRepository: RepositoryProvider.of<IAuthRepository>(context),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<IAuthRepository>(
+          lazy: false,
+          create: (_) => AuthRepository(),
         ),
+        RepositoryProvider<IBusinessCardRepository>(
+          lazy: false,
+          create: (_) => FirebaseCardRepository(),
+        ),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            lazy: false,
+            create: (BuildContext context) => AuthBloc(authRepository: RepositoryProvider.of<IAuthRepository>(context)),
+          ),
+          BlocProvider(
+            lazy: false,
+            create: (BuildContext context) => MyCardBloc(businessCardRepository: RepositoryProvider.of<IBusinessCardRepository>(context)),
+          ),
+        ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           home: StreamBuilder<User?>(
