@@ -2,7 +2,7 @@ import 'contacts.dart';
 import 'cv.dart';
 import 'portfolio.dart';
 
-class User {
+class Person {
   String? externalId;
   String? internalId;
   String? familyName;
@@ -12,7 +12,7 @@ class User {
   Portfolio? portfolio;
   Contacts? contacts;
 
-  User(
+  Person(
       {this.externalId,
         this.internalId,
         this.familyName,
@@ -22,7 +22,7 @@ class User {
         this.portfolio,
         this.contacts});
 
-  User.fromJson(Map<String, dynamic> json) {
+  Person.fromJson(Map<String, dynamic> json) {
     externalId = json['external_id'];
     internalId = json['internal_id'];
     familyName = json['family_name'];

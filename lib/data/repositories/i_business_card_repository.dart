@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../entity/user.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 abstract class IBusinessCardRepository {
   // получить все визитку
@@ -7,9 +8,9 @@ abstract class IBusinessCardRepository {
 
   // РАБОТА СО СВОЕЙ ВИЗИТКОЙ
   // получить мою визитку
-  Future<DataSnapshot?> getMyCard(User user);
+  Future<Person> getMyCard(String userId);
   // создать визитку
-  Future<void> createMyCard(User user);
+  Future<void> createMyCard(Person user);
   // изменить визитку
   Future<void> changeMyCard();
   // удалить визитку

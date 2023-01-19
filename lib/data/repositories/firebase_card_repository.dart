@@ -1,9 +1,9 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_name_is/data/repositories/i_business_card_repository.dart';
 import '../entity/user.dart';
 
 class FirebaseCardRepository implements IBusinessCardRepository {
-  final _database = FirebaseDatabase.instance;
+  final _database = FirebaseFirestore.instance.collection('users');
 
   @override
   Future<void> addCardToCollection() {
@@ -18,13 +18,12 @@ class FirebaseCardRepository implements IBusinessCardRepository {
   }
 
   @override
-  Future<void> createMyCard(User user) async {
+  Future<void> createMyCard(Person user) async {
     try {
-      await _database.ref('user/contact/${user.internalId}').set(user.toJson());
+      await _database.doc(user.internalId).set(user.toJson());
     } catch (error) {
       throw Exception('Не получилось создать визитку');
     }
-
   }
 
   @override
@@ -46,11 +45,12 @@ class FirebaseCardRepository implements IBusinessCardRepository {
   }
 
   @override
-  Future<DataSnapshot?> getMyCard(User user) async {
-    try{
-      final result = await _database.ref('users/${user.internalId}').get();
-      return result;
-    } catch(error){
+  Future<Person> getMyCard(String userId) async {
+    try {
+      final result = _database.snapshots().map((event) => event.docs.firstWhere((doc) => doc.id == userId).data());
+      final person = await result.first;
+      return Person.fromJson(person);
+    } catch (error) {
       throw Exception('Не получилось загрузить личную визитку');
     }
   }
